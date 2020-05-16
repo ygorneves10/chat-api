@@ -1,0 +1,13 @@
+{
+  "name": "chat-api",
+  "description": "Chat API",
+  "repository": "https://github.com/ygorneves10/chat-api.git",
+  "keywords": [
+    "node",
+    "express",
+    "mysql",
+    "socket.io",
+    "heroku"
+  ],
+  "image": "heroku/nodejs"
+}

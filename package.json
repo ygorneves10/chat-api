@@ -33,6 +33,7 @@
   "keywords": [
     "node",
     "express",
+    "mysql",
     "socket.io"
   ],
   "author": "Ygor Neves",
