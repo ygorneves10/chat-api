@@ -1,17 +1,41 @@
 {
   "name": "chat-api",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.0",
+  "description": "Chat API",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "release:patch": "generate-release -t patch",
+    "release:minor": "generate-release -t minor",
+    "release:major": "generate-release -t major",
+    "ts:watch": "tsc --watch",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ygorneves10/chat-api.git"
   },
-  "keywords": [],
-  "author": "",
+  "dependencies": {
+    "ejs": "^2.5.6",
+    "@types/bluebird": "^3.5.31",
+    "@types/validator": "^13.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mysql2": "^2.1.0",
+    "sequelize": "^5.21.9",
+    "typescript": "^3.9.2",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "request": "^2.81.0",
+    "generate-release": "^1.1.1",
+    "tape": "^4.7.0"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "socket.io"
+  ],
+  "author": "Ygor Neves",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ygorneves10/chat-api/issues"
