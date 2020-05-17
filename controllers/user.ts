@@ -1,18 +1,21 @@
-import { Sequelize, sequelize } from "./connect"
+import { Sequelize, sequelize } from './connect'
+import { mainController } from "./main"
 
 interface User {
     name: String
     email: String
     username: String
+    password: String
 }
 
 interface UserUpdate {
     name?: String
     email?: String
     username?: String
+    password?: String
 }
 
-const users = sequelize.define('users', {
+export const users = sequelize.define('users', {
     name: {
         type: Sequelize.TEXT,
         allowNull: false,
@@ -30,117 +33,24 @@ const users = sequelize.define('users', {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true
+    },
+    password: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: false
     }
 });
 
-const crud = {
-    create: function (attributes: User): Promise<User> {
-        return users.create(attributes)
-    },
-    read: function (email: String): Promise<User> {
-        return users.findOne({ where: { email } })
-    },
-    readAll: function (): Promise<Array<User>> {
-        return users.findAll()
-    },
-    update: function (id: Number, attributes: UserUpdate): Promise<Number> {
+export const userController = {
+    getAll: (): Promise<Array<User>> => users.findAll(),
+    create: async (attributes: User): Promise<User> => users.create({ ...attributes, password: await mainController.bcryptPassword(attributes.password) }),
+    read: (email: String): Promise<User> => users.findOne({ where: { email } }),
+    delete: (id: Number): Promise<Number> => users.destroy({ where: { id } }),
+    update: async (id: Number, attributes: UserUpdate): Promise<Number> => {
+        if (attributes.password) {
+            attributes.password = await mainController.bcryptPassword(attributes.password)
+        }
+
         return users.update(attributes, { where: { id } })
-    },
-    delete: function (id: Number): Promise<Number> {
-        return users.destroy({ where: { id } })
     }
 }
-
-export const userController = {
-    getAllUsers: function (req: any, res: any) {
-        crud.readAll().then(response => {
-            res.json({
-                success: true,
-                users: response
-            })
-        }).catch((error: Object) => {
-            res.json({
-                success: false,
-                error
-            })
-        })
-    },
-    getUser: function (req: any, res: any) {
-        const { email } = req.query
-
-        crud.read(email).then((response: Object) => {
-            res.json({
-                success: true,
-                user: response
-            })
-        }).catch((error: Object) => {
-            res.json({
-                success: false,
-                error
-            })
-        })
-    },
-    deleteUser: function (req: any, res: any) {
-        const { id } = req.params
-
-        crud.delete(id).then((response: Object) => {
-            res.json({
-                success: true,
-                user: response
-            })
-        }).catch((error: Object) => {
-            res.json({
-                success: false,
-                error
-            })
-        })
-    },
-    sendUser: function (req: any, res: any) {
-        const { id, email, name, username } = req.body
-
-        if (id) {
-            const updateAttributes: UserUpdate = {}
-
-            if (email) {
-                updateAttributes.email = email
-            }
-
-            if (name) {
-                updateAttributes.name = name
-            }
-
-            if (username) {
-                updateAttributes.username = username
-            }
-
-            return crud.update(id, updateAttributes).then((response: Object) => {
-                res.json({
-                    success: true,
-                    user: response
-                })
-            }).catch((error: Object) => {
-                res.json({
-                    success: false,
-                    error
-                })
-            })
-        }
-
-        const createAttributes: User = {
-            email, name, username
-        }
-
-        return crud.create(createAttributes).then(response => {
-            res.json({
-                success: true,
-                user: response
-            })
-        }).catch((error: Object) => {
-            res.json({
-                success: false,
-                error
-            })
-        })
-
-    }
-};
