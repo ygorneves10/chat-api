@@ -1,0 +1,5 @@
+{
+    "post_complete_commands": [
+        "git push heroku master"
+    ]
+}
