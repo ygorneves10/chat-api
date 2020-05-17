@@ -1,3 +1,5 @@
+import { userController } from "./controllers/user"
+
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -6,6 +8,10 @@ const routes = express.Router()
 const PORT = process.env.PORT || 5000;
 
 // Users
+routes.post('/user', userController.sendUser)
+routes.get('/user', userController.getUser)
+routes.get('/users', userController.getAllUsers)
+routes.delete('/user/:id', userController.deleteUser)
 
 // Rooms
 
