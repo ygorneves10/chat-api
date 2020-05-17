@@ -9,8 +9,11 @@ const routes = express.Router()
 const PORT = process.env.PORT || 5000;
 const io = require('socket.io')(http);
 
-io.on('connection', function (socket: { id: String; }) {
-    console.log("CONNECTED", socket.id)
+io.on('connection', function (socket: any) {
+
+    socket.on("message", (message: any) => {
+        io.emit("received", message)
+    })
 });
 
 routes.get('/', function (req: any, res: { sendFile: (arg0: string) => void; }) {

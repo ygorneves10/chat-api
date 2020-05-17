@@ -8,15 +8,11 @@
 </head>
 
 <body>
+  <div id="app"></div>
 
-  <h3>Hello, world!</h3>
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    var socket = io();
-    socket.on('connect', function (socket) {
-      console.log("Connected => ", socket)
-    });
-  </script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js'></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="main.js"></script>
 </body>
 
 </html>
