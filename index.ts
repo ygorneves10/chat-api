@@ -7,7 +7,7 @@ const app = require('express')();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 
-io.on('connection', function (socket: any) {
+io.on('connection', (socket: any) => {
     socket.on("send message", (message: Message) => {
         messageController.create(message).then(createdMessage => io.emit("received message", createdMessage))
     })
