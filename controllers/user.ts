@@ -1,7 +1,7 @@
 import { Sequelize, sequelize } from './connect'
 import { mainController } from "./main"
 
-interface User {
+export interface User {
     name: String
     email: String
     username: String
