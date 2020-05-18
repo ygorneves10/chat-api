@@ -6,7 +6,7 @@ export interface Room {
     name: String
     slug?: String
     ownerId: Number
-    password: String
+    password?: String
 }
 
 interface RoomUpdate {
@@ -38,7 +38,7 @@ export const rooms = sequelize.define('rooms', {
     },
     password: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
         unique: false
     }
 });
@@ -69,7 +69,9 @@ export const roomController = {
             roomData.slug = suggestion
         }
 
-        roomData.password = await mainController.bcryptPassword(password)
+        if (password) {
+            roomData.password = await mainController.bcryptPassword(password)
+        }
 
         return rooms.create(roomData)
     },

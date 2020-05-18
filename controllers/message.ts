@@ -1,5 +1,5 @@
 import { Sequelize, sequelize } from './connect'
-import { users } from "./user"
+import { users, User } from "./user"
 import { rooms } from "./room"
 
 export interface Message {
@@ -52,8 +52,35 @@ messages.belongsTo(users, {
 })
 
 export const messageController = {
-    create: (roomData: Message): Promise<Message> => messages.create(roomData),
-    read: (roomId: Number): Promise<Array<Message>> => messages.findAll({ where: { roomId } }),
+    create: async (roomData: Message): Promise<Object> => {
+        const { senderId, text, roomId }: Message = await messages.create(roomData)
+        const { name, email, username }: User = await users.findOne({ attributes: ['name', 'email', 'username'] }, { where: { id: senderId } })
+
+        return {
+            text,
+            roomId,
+            senderId,
+            name,
+            email,
+            username
+        }
+    },
+    read: async (room: Number): Promise<Array<Object>> => {
+        const messagesArr: Array<Message> = await messages.findAll({ where: { roomId: room } })
+
+        return Promise.all(messagesArr.map(async ({ roomId, senderId, text }) => {
+            const { name, email, username }: User = await users.findOne({ attributes: ['name', 'email', 'username'] }, { where: { id: senderId } })
+
+            return {
+                text,
+                senderId,
+                roomId,
+                name,
+                email,
+                username
+            }
+        }))
+    },
     update: ({ text, id }: MessageUpdate): Promise<Array<Number>> => messages.update({ text }, { where: { id } }),
     delete: (id: Number): Promise<Array<Number>> => messages.destroy({ where: { id } })
 };
